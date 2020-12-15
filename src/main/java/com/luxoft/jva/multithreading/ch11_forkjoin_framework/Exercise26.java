@@ -1,5 +1,9 @@
 package com.luxoft.jva.multithreading.ch11_forkjoin_framework;
 
+import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.ForkJoinPool;
+
 /**
  * In this exercise we will:
  * <ul>
@@ -15,8 +19,22 @@ package com.luxoft.jva.multithreading.ch11_forkjoin_framework;
  */
 public class Exercise26 {
 
+	private static void testForkJoin() {
+		int[] ints = new Random().ints(0, 1000000).limit(1000000).toArray();
+
+		ForkJoinPool forkJoinPool = new ForkJoinPool(10);
+		MyRecursivesumTask myRecursivesumTask = new MyRecursivesumTask(100000, ints, 0, ints.length);
+		Integer sum = forkJoinPool.invoke(myRecursivesumTask);
+
+		int sumCheck = Arrays.stream(ints).sum();
+		assert (sum == sumCheck);
+
+		forkJoinPool.shutdown();
+	}
+
 	public static void main(String[] args) {
 		// your code goes here
+		testForkJoin();
 	}
 
 }
